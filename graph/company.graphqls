@@ -9,5 +9,5 @@ type Company implements Node {
 
 type CompanyPagination implements Pagination {
     pageInfo: PaginationInfo!
-    nodes: [Node!]!
+    nodes: [Company!]!
 }

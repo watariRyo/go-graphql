@@ -8,5 +8,5 @@ type Department implements Node {
 
 type DepartmentPagination implements Pagination {
     pageInfo: PaginationInfo!
-    nodes: [Node!]!
+    nodes: [Department!]!
 }
