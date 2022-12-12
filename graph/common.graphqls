@@ -1,0 +1,19 @@
+#全体で共用するインターフェイスNode
+interface Node {
+	id: ID!
+}
+
+scalar Timestamp
+
+interface Pagination {
+	pageInfo: PaginationInfo!
+	nodes: [Node!]!
+}
+
+type PaginationInfo {
+	page: Int!
+	paginationLength: Int!
+	hasNextPage: Boolean!
+	count: Int!
+	totalCount: Int!
+}
