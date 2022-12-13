@@ -37,6 +37,9 @@ type Config struct {
 }
 
 type ResolverRoot interface {
+	Company() CompanyResolver
+	Department() DepartmentResolver
+	Employee() EmployeeResolver
 	Mutation() MutationResolver
 	Query() QueryResolver
 }
@@ -119,6 +122,18 @@ type ComplexityRoot struct {
 	}
 }
 
+type CompanyResolver interface {
+	Departments(ctx context.Context, obj *model.Company) (*model.DepartmentPagination, error)
+	Employees(ctx context.Context, obj *model.Company) (*model.EmployeePagination, error)
+}
+type DepartmentResolver interface {
+	Company(ctx context.Context, obj *model.Department) (*model.Company, error)
+	Employees(ctx context.Context, obj *model.Department) (*model.EmployeePagination, error)
+}
+type EmployeeResolver interface {
+	Department(ctx context.Context, obj *model.Employee) (*model.Department, error)
+	Company(ctx context.Context, obj *model.Employee) (*model.Company, error)
+}
 type MutationResolver interface {
 	CreateCompany(ctx context.Context, input model.CreateCompanyInput) (*model.Company, error)
 	UpdateCompany(ctx context.Context, input model.UpdateCompanyInput) (*model.Company, error)
@@ -1180,7 +1195,7 @@ func (ec *executionContext) _Company_departments(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Departments, nil
+		return ec.resolvers.Company().Departments(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1201,8 +1216,8 @@ func (ec *executionContext) fieldContext_Company_departments(ctx context.Context
 	fc = &graphql.FieldContext{
 		Object:     "Company",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "pageInfo":
@@ -1230,7 +1245,7 @@ func (ec *executionContext) _Company_employees(ctx context.Context, field graphq
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Employees, nil
+		return ec.resolvers.Company().Employees(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1251,8 +1266,8 @@ func (ec *executionContext) fieldContext_Company_employees(ctx context.Context, 
 	fc = &graphql.FieldContext{
 		Object:     "Company",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "pageInfo":
@@ -1526,7 +1541,7 @@ func (ec *executionContext) _Department_company(ctx context.Context, field graph
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Company, nil
+		return ec.resolvers.Department().Company(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1547,8 +1562,8 @@ func (ec *executionContext) fieldContext_Department_company(ctx context.Context,
 	fc = &graphql.FieldContext{
 		Object:     "Department",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
@@ -1584,7 +1599,7 @@ func (ec *executionContext) _Department_employees(ctx context.Context, field gra
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Employees, nil
+		return ec.resolvers.Department().Employees(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1605,8 +1620,8 @@ func (ec *executionContext) fieldContext_Department_employees(ctx context.Contex
 	fc = &graphql.FieldContext{
 		Object:     "Department",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "pageInfo":
@@ -2054,7 +2069,7 @@ func (ec *executionContext) _Employee_department(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Department, nil
+		return ec.resolvers.Employee().Department(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2075,8 +2090,8 @@ func (ec *executionContext) fieldContext_Employee_department(ctx context.Context
 	fc = &graphql.FieldContext{
 		Object:     "Employee",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
@@ -2110,7 +2125,7 @@ func (ec *executionContext) _Employee_company(ctx context.Context, field graphql
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Company, nil
+		return ec.resolvers.Employee().Company(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2131,8 +2146,8 @@ func (ec *executionContext) fieldContext_Employee_company(ctx context.Context, f
 	fc = &graphql.FieldContext{
 		Object:     "Employee",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
@@ -5755,43 +5770,69 @@ func (ec *executionContext) _Company(ctx context.Context, sel ast.SelectionSet, 
 			out.Values[i] = ec._Company_id(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "companyName":
 
 			out.Values[i] = ec._Company_companyName(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "representative":
 
 			out.Values[i] = ec._Company_representative(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "phoneNumber":
 
 			out.Values[i] = ec._Company_phoneNumber(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "departments":
+			field := field
 
-			out.Values[i] = ec._Company_departments(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Company_departments(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "employees":
+			field := field
 
-			out.Values[i] = ec._Company_employees(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Company_employees(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -5853,36 +5894,62 @@ func (ec *executionContext) _Department(ctx context.Context, sel ast.SelectionSe
 			out.Values[i] = ec._Department_id(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "departmentName":
 
 			out.Values[i] = ec._Department_departmentName(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "email":
 
 			out.Values[i] = ec._Department_email(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "company":
+			field := field
 
-			out.Values[i] = ec._Department_company(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Department_company(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "employees":
+			field := field
 
-			out.Values[i] = ec._Department_employees(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Department_employees(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -5944,64 +6011,90 @@ func (ec *executionContext) _Employee(ctx context.Context, sel ast.SelectionSet,
 			out.Values[i] = ec._Employee_id(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "name":
 
 			out.Values[i] = ec._Employee_name(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "gender":
 
 			out.Values[i] = ec._Employee_gender(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "email":
 
 			out.Values[i] = ec._Employee_email(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "latestLoginAt":
 
 			out.Values[i] = ec._Employee_latestLoginAt(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "dependentsNum":
 
 			out.Values[i] = ec._Employee_dependentsNum(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "isManager":
 
 			out.Values[i] = ec._Employee_isManager(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "department":
+			field := field
 
-			out.Values[i] = ec._Employee_department(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Employee_department(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "company":
+			field := field
 
-			out.Values[i] = ec._Employee_company(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Employee_company(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

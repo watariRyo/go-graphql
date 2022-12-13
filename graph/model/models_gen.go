@@ -19,16 +19,6 @@ type Pagination interface {
 	GetNodes() []Node
 }
 
-type Company struct {
-	ID             string                `json:"id"`
-	CompanyName    string                `json:"companyName"`
-	Representative string                `json:"representative"`
-	PhoneNumber    string                `json:"phoneNumber"`
-	Departments    *DepartmentPagination `json:"departments"`
-	Employees      *EmployeePagination   `json:"employees"`
-}
-
-func (Company) IsNode()            {}
 func (this Company) GetID() string { return this.ID }
 
 type CompanyPagination struct {
@@ -68,15 +58,6 @@ type CreateEmployeeInput struct {
 	IsManager     bool   `json:"isManager"`
 }
 
-type Department struct {
-	ID             string              `json:"id"`
-	DepartmentName string              `json:"departmentName"`
-	Email          string              `json:"email"`
-	Company        *Company            `json:"company"`
-	Employees      *EmployeePagination `json:"employees"`
-}
-
-func (Department) IsNode()            {}
 func (this Department) GetID() string { return this.ID }
 
 type DepartmentPagination struct {
@@ -97,19 +78,6 @@ func (this DepartmentPagination) GetNodes() []Node {
 	return interfaceSlice
 }
 
-type Employee struct {
-	ID            string      `json:"id"`
-	Name          string      `json:"name"`
-	Gender        Gender      `json:"gender"`
-	Email         string      `json:"email"`
-	LatestLoginAt string      `json:"latestLoginAt"`
-	DependentsNum int         `json:"dependentsNum"`
-	IsManager     bool        `json:"isManager"`
-	Department    *Department `json:"department"`
-	Company       *Company    `json:"company"`
-}
-
-func (Employee) IsNode()            {}
 func (this Employee) GetID() string { return this.ID }
 
 type EmployeePagination struct {
