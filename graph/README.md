@@ -11,7 +11,7 @@
 3. 生成されたコードの調整
   - 外部キー系の項目はそのまま構造体で定義されている（models_gen.go）
   - DBはだいたいIDで結合するはずで構造体のままだとまずいので、IDに変換してやる必要がある
-    - models_gen.goは勝手に生成されるので放置。models.goを作成
+    - models_gen.goは勝手に生成されるので放置。models.go（同じpackageなら別になんでも良い）を作成
     - models_gen.goのtypeをmodels.goに移行し、外部キー部分をIDに変更する  
     ※`hoge: Hoge!` となっている部分を`hogeID: ID!`にする
 4. コード生成  
