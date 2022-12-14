@@ -13,7 +13,12 @@ import (
 
 // Company is the resolver for the company field.
 func (r *queryResolver) Company(ctx context.Context, id string) (*model.Company, error) {
-	panic(fmt.Errorf("not implemented: Company - company"))
+	return &model.Company{
+		ID:             id,
+		CompanyName:    "test会社",
+		Representative: "俺",
+		PhoneNumber:    "0120-333-906",
+	}, nil
 }
 
 // Companies is the resolver for the companies field.

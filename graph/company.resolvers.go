@@ -13,7 +13,30 @@ import (
 
 // Departments is the resolver for the departments field.
 func (r *companyResolver) Departments(ctx context.Context, obj *model.Company) (*model.DepartmentPagination, error) {
-	panic(fmt.Errorf("not implemented: Departments - departments"))
+	nodes := []*model.Department{
+		{
+			ID:             "depart1",
+			DepartmentName: "部署1",
+			Email:          "test1@mail.com",
+			CompanyID:      obj.ID,
+		},
+		{
+			ID:             "depart2",
+			DepartmentName: "部署2",
+			Email:          "test2@mail.com",
+			CompanyID:      obj.ID,
+		},
+	}
+	return &model.DepartmentPagination{
+		PageInfo: &model.PaginationInfo{
+			Page:             1,
+			PaginationLength: 1,
+			HasNextPage:      false,
+			Count:            2,
+			TotalCount:       2,
+		},
+		Nodes: nodes,
+	}, nil
 }
 
 // Employees is the resolver for the employees field.

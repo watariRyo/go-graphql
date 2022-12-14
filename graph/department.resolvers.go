@@ -13,7 +13,7 @@ import (
 
 // Company is the resolver for the company field.
 func (r *departmentResolver) Company(ctx context.Context, obj *model.Department) (*model.Company, error) {
-	panic(fmt.Errorf("not implemented: Company - company"))
+	return r.CompanyLoader.Load(obj.CompanyID)
 }
 
 // Employees is the resolver for the employees field.
