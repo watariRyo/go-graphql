@@ -4,9 +4,12 @@ import (
 	"context"
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/vektah/gqlparser/v2/gqlerror"
+	"github.com/watariRyo/go-graphql/graph/dataloader"
+	"github.com/watariRyo/go-graphql/graph/model"
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
@@ -21,7 +24,24 @@ func main() {
 		port = defaultPort
 	}
 
-	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{}}))
+	companyLoader := dataloader.NewCompanyLoader(dataloader.CompanyLoaderConfig{
+		MaxBatch: 100,                  // 最大数
+		Wait:     2 * time.Microsecond, // ためる時間
+		Fetch: func(keys []string) ([]*model.Company, []error) {
+			companies := make([]*model.Company, len(keys))
+			errors := make([]error, len(keys))
+
+			// 取得処理
+			// SELECT * FROM company WHERE company_id IN (...)
+
+			// 引数のkeyに対応する順番の配列で返す
+			return companies, errors
+		},
+	})
+
+	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{
+		CompanyLoader: *companyLoader,
+	}}))
 
 	srv.SetErrorPresenter(func(ctx context.Context, e error) *gqlerror.Error {
 		err := graphql.DefaultErrorPresenter(ctx, e)

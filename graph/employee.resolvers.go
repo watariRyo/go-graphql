@@ -18,7 +18,8 @@ func (r *employeeResolver) Department(ctx context.Context, obj *model.Employee) 
 
 // Company is the resolver for the company field.
 func (r *employeeResolver) Company(ctx context.Context, obj *model.Employee) (*model.Company, error) {
-	panic(fmt.Errorf("not implemented: Company - company"))
+	//panic(fmt.Errorf("not implemented: Company - company"))
+	return r.CompanyLoader.Load(obj.CompanyID)
 }
 
 // Employee returns EmployeeResolver implementation.
